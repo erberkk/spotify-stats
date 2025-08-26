@@ -122,3 +122,6 @@ spotify-for-readme/
 ## 🚨 Important Notes
 
 - **Development Mode**: Spotify apps start in development mode (25 user limit)
+
+## Example
+<img width="860" height="301" alt="image" src="https://github.com/user-attachments/assets/17ac11ec-e63c-40a3-a1a5-790ae161099e" />
