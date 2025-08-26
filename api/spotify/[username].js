@@ -281,9 +281,20 @@ function render({ hero, heroImg, top, tImgs, aImgs, username }) {
   const artistY = titleY + 28;
   const statusY = artistY + 25;
 
-  // Progress bar için
-  const progressY = imgY + imgSize + 20;
+  // Progress bar genişliği
   const progressWidth = cardW - 32;
+
+  // === Equalizer
+  const eqHeight = 16;
+  const eqY = imgY + imgSize + 16;
+  const eqBarW = 3;
+  const eqGap = 2;
+  const eqCount = Math.floor(progressWidth / (eqBarW + eqGap));
+  const eqTotalW = eqCount * eqBarW + (eqCount - 1) * eqGap;
+  const eqX = imgX + (progressWidth - eqTotalW) / 2;
+
+  // Progress bar için
+  const progressY = eqY + eqHeight + 20;
   const progressPercent = hero.duration > 0 ? (hero.progress / hero.duration) : 0;
   const currentW = progressWidth * progressPercent;
   const remainingMs = Math.max(0, (hero.duration || 0) - (hero.progress || 0));
@@ -496,7 +507,51 @@ function render({ hero, heroImg, top, tImgs, aImgs, username }) {
         ${hero.isPlaying ? 'PLAYING' : (hero.label === 'Paused' ? 'PAUSED' : 'OFFLINE')}
       </text>
     </g>
-    
+
+    <!-- Equalizer (üstte tek satır) -->
+    <g aria-label="Equalizer" role="img">
+      ${
+        Array.from({ length: eqCount }).map((_, i) => {
+          // Her bar için benzersiz maksimum yükseklik ve süre
+          const maxH = 5 + Math.floor((i * 7919 % 17) + Math.sin(i * 0.7) * 3);
+          const durS = (0.7 + Math.sin(i * 1.3) * 0.3 + Math.cos(i * 0.8) * 0.2).toFixed(2);
+          const delayS = ((i * 0.13 + Math.sin(i * 2.1) * 0.15) % 0.8).toFixed(2);
+          const x = eqX + i * (eqBarW + eqGap);
+          const baseY = eqY + eqHeight;
+          const minH = 3;
+          const yAtMin = baseY - minH;
+          const yAtMax = baseY - maxH;
+
+          if (hero.isPlaying) {
+            return `
+              <rect x="${x}" y="${yAtMin}" width="${eqBarW}" height="${minH}" rx="${eqBarW/2}" fill="url(#greenGrad)" opacity="0.9">
+                <animate attributeName="height"
+                         values="${minH};${maxH};${minH}"
+                         dur="${durS}s"
+                         begin="${delayS}s"
+                         repeatCount="indefinite"
+                         calcMode="spline"
+                         keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
+                         keyTimes="0;0.5;1"/>
+                <animate attributeName="y"
+                         values="${yAtMin};${yAtMax};${yAtMin}"
+                         dur="${durS}s"
+                         begin="${delayS}s"
+                         repeatCount="indefinite"
+                         calcMode="spline"
+                         keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
+                         keyTimes="0;0.5;1"/>
+              </rect>
+            `;
+          } else {
+            return `
+              <rect x="${x}" y="${yAtMin}" width="${eqBarW}" height="${minH}" rx="${eqBarW/2}" fill="${COLORS.border}" opacity="0.7"/>
+            `;
+          }
+        }).join("")
+      }
+    </g>
+
     <!-- Progress bar -->
     ${hero.duration > 0 ? `
       <!-- Backdrop -->
