@@ -1,47 +1,34 @@
-# 🎵 Multi-User Spotify Widget for GitHub README
+# Spotify card for your GitHub README
 
-**Display your live Spotify activity in your GitHub README!** Show currently playing songs, your favorite tracks and artists... Everyone can connect their own Spotify account and create personalized widgets.
+Show what you're listening to on Spotify, plus your top tracks and artists, right in your GitHub profile README. Anyone can connect their own account.
 
-## ✨ Features
+[![Spotify](https://spotify-for-readme-pi.vercel.app/api/spotify/zk0e8yk1gnwx793n61k0aflb6)](https://open.spotify.com/user/zk0e8yk1gnwx793n61k0aflb6)
 
-- 🎧 **Live Music**: See your currently playing song in real-time
-- 🔥 **Top Lists**: Your most listened tracks and artists
-- ⚡ **Quick Setup**: Connect your Spotify account with one click
-- 🌍 **Multi-Language**: Turkish and English support
-- 🔒 **Secure**: Tokens stored safely in Redis
-- 🎯 **Interactive**: Click on songs/artists to open in Spotify (not available on github readme because of restricts)
+Designed to sit next to [github-streak-stats](https://github.com/erberkk/github-streak-stats): same layout, palette and typography.
 
-## 🚀 Quick Start
+## Features
 
-### For Users
+- **Now playing**: the current track with album art, a live progress bar and an equalizer while playing; falls back to the last played track
+- **Top tracks and artists**: your five favourites over the last 4 weeks, 6 months or all time
+- **Light and dark mode**: follows the viewer's color scheme automatically
+- **Fast**: Spotify calls run in parallel and responses are briefly cached on the CDN, so the card doesn't time out on GitHub
 
-1. **Visit the landing page**: `https://spotify-for-readme-pi.vercel.app/`
-2. **Click "Connect Spotify"**
-3. **Authorize on Spotify**
-4. **Copy your widget URL**
-5. **Add to your GitHub README**
+## Quick start
 
-### Widget URL Format
+1. Open [spotify-for-readme-pi.vercel.app](https://spotify-for-readme-pi.vercel.app/) and click **Connect Spotify**.
+2. Authorize on Spotify.
+3. Copy the Markdown snippet you get into your GitHub profile README:
 
 ```markdown
-[![Spotify Summary](https://your-domain.vercel.app/api/spotify/USERNAME)](https://open.spotify.com/user/USERNAME)
+[![Spotify](https://spotify-for-readme-pi.vercel.app/api/spotify/YOUR_SPOTIFY_ID)](https://open.spotify.com/user/YOUR_SPOTIFY_ID)
 ```
 
-### Example Usage
+### Options
 
-```markdown
-# 🎵 My GitHub Profile
-
-[![Spotify Summary](https://spotify-for-readme-pi.vercel.app/api/spotify/erberkk)](https://open.spotify.com/user/erberkk)
-```
-
-## 🎨 What You'll See
-
-The widget displays:
-- **Currently Playing**: Live song with animated progress bar
-- **Top Tracks**: Your 5 most played tracks recently
-- **Top Artists**: Your 5 most played artists recently
-- **Status**: Playing, paused, or offline states
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `theme` | `auto`, `dark`, `light` | `auto` |
+| `range` | `short_term` (4 weeks), `medium_term` (6 months), `long_term` (all time) | `short_term` |
 
 ## 🔧 For Developers
 
@@ -100,13 +87,17 @@ cd spotify-for-readme
 ```
 spotify-for-readme/
 ├── api/
+│   ├── _lib/
+│   │   ├── card.js           # SVG renderer
+│   │   └── redis.js          # Shared Redis client
 │   ├── auth/
 │   │   ├── login.js          # Spotify OAuth initiation
 │   │   └── callback.js       # OAuth callback & token storage
 │   └── spotify/
 │       └── [username].js     # Dynamic Spotify widget endpoint
 ├── public/
-│   └── index.html            # Landing page
+│   ├── index.html            # Landing page
+│   └── style.css             # Shared page styles
 ├── package.json
 └── README.md
 ```
@@ -122,6 +113,3 @@ spotify-for-readme/
 ## 🚨 Important Notes
 
 - **Development Mode**: Spotify apps start in development mode (25 user limit)
-
-## Example
-<img width="860" height="301" alt="image" src="https://github.com/user-attachments/assets/17ac11ec-e63c-40a3-a1a5-790ae161099e" />
